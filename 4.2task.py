@@ -22,6 +22,7 @@ def normalizeText(text):
     updatedAllSentences = __updateSentenses(allSentences)
     finalString = "".join(updatedAllSentences).replace('\n', '')
     return finalString
+
 def __updateSentenses(allSentences):
     updatedAllSentences = []
     lastSentence = ""
@@ -33,24 +34,28 @@ def __updateSentenses(allSentences):
         wordsInSentence = sentence.split(" ")
         lastWord = wordsInSentence[len(wordsInSentence) - 1]
         lastSentence += lastWord + " "
-        strippedSentence = sentence.strip().capitalize().replace(' iz ', ' is ').replace('"is"', 'iz').replace("  ",
-                                                                                                               " ") + ". "
+        strippedSentence = __beautifySentenceWithReplaceIs(sentence, "iz", "is")
         updatedAllSentences.append(strippedSentence)
 
     updatedLastSentence = (lastSentence.capitalize() + '.').replace(' .', '. ')
-    # create last sentence
     indexForLastSentence = 0
     for sentence in updatedAllSentences:
-        # find sentence with "paragraph."
         if "paragraph." in sentence:
-            # find index this sentences- and index new sentence
             indexForLastSentence = updatedAllSentences.index(sentence) + 1
-    # insert new sentence
     updatedAllSentences.insert(indexForLastSentence, updatedLastSentence)
     return updatedAllSentences
 
+def __beautifySentenceWithReplaceIs(sentence, wordForChange, wordWhichIsReplaced):
+    wordForChangeWithWhitespaces = ' ' + wordForChange + ' '
+    wordWhichIsReplacedWithWhitespaces = ' ' + wordWhichIsReplaced + ' '
+    wordWhichIsReplacedWithQuotes = '"' + wordWhichIsReplaced + '"'
+    return sentence.strip().capitalize().replace(wordForChangeWithWhitespaces, wordWhichIsReplacedWithWhitespaces).replace(wordWhichIsReplacedWithQuotes, wordForChange).replace("  ", " ") + ". "
+
+def __countWhitespaces(text):
+    return len(re.findall(r"\s", normalizedString))
+
 normalizedString = normalizeText(textstring)
-countWhitespaces = len(re.findall(r"\s", normalizedString))
+countWhitespaces = __countWhitespaces(normalizedString)
 print(normalizedString)
 print(countWhitespaces)
 
