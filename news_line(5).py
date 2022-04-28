@@ -18,7 +18,7 @@ class News(Info):
         super().__init__("NEWS")
         self.city = input("Write city: ")
         # receive current time
-        self.time = datetime.datetime.now()
+        self.time = datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S")
         # creating news
         self.fullDescription = self.descriptionText + "\n" + self.city + ", " + str(self.time) + "\n"
 
@@ -58,11 +58,14 @@ class SportNews(Info):
         self.city = input("Write city: ")
         self.country = input("Write country: ")
         self.kindOfSport = input("Write kind of sport: ")
-        self.dateOfPublishing = datetime.datetime.now()
-        # creating sport news
+        self.team1 = input("Team 1: ")
+        self.team2 = input("Team 2: ")
+        self.scoreTeam1 = input("Score of team 1:")
+        self.scoreTeam2 = input("Score of team 2:")
+        self.dateOfPublishing = datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S")
+         # creating sport news
         self.fullDescription = self.descriptionText + "\n" + self.city + ", " + self.country + ", " + self.kindOfSport + ", " + str(
-            self.dateOfPublishing) + "\n"
-
+            self.dateOfPublishing) + "\n" + "team 1: "+self.team1 + "\n" + "team 2:" + self.team2 + "\n" + "Score: " + self.scoreTeam1 + ":" + self.scoreTeam2 + "\n" + "Winner: " + self.winner()
     def writeAdd(self):
         dataFile = open('task5.txt', 'a')
         dataFile.write(self.titleAd)
@@ -70,6 +73,13 @@ class SportNews(Info):
         dataFile.write("\n")
         dataFile.close()
 
+    def winner(self):
+        if self.scoreTeam1 > self.scoreTeam2:
+            return self.team1
+        elif self.scoreTeam1 < self.scoreTeam2:
+            return self.team2
+        else:
+            return "draw"
 
 def mainFunc():
     number = input(
