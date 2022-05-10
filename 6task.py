@@ -204,7 +204,7 @@ def __parseFromFile(filePath=None):
     if filePath is None:
         if os.path.isfile("json.txt"):
             __writeAdsFromTxtFile("json.txt")
-            os.remove("json.txt")
+           # os.remove("json.txt")
         else:
             print("Sorry, file not found. Please try again.")
             __writeTextFromPath()
