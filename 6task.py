@@ -235,3 +235,4 @@ def __writeAdsFromTxtFile(filePath=None):
 
 #__parseFromFile()
 mainFunc()
+
