@@ -154,9 +154,20 @@ def __writeNews(parsedObject=None):
 
 
 def __writePersonalAd(parsedObject=None):
-    personalAd = PersonalAd(parsedObject)
+    try:
+        personalAd = PersonalAd(parsedObject)
+    except:
+        print("Error during initialization PersonalAd. Check date format.\n")
+        writePersonalAdError()
+        mainFunc()
     personalAd.writeAdd()
 
+def writePersonalAdError():
+    dataFile = open('errors.txt', 'a')
+    dataFile.write("Error during initialization PersonalAd. Check date format.\n")
+    dataFile.write(str(datetime.datetime.now()) + "\n")
+    dataFile.write("\n")
+    dataFile.close()
 
 def __writeSportAd(parsedObject=None):
     sportNews = SportNews(parsedObject)
@@ -187,7 +198,7 @@ def __writeTextFromPath():
     __graduationSurvey()
 
 class AdParsedObject(object):
-    def __init__(self, city, country, type, descriptionText, expirationDate, kindOfSport, team1, team2, scoreTeam1, scoreTeam2):
+    def __init__(self, city='', country='', type='', descriptionText='', expirationDate='', kindOfSport='', team1='', team2='', scoreTeam1='', scoreTeam2=''):
         self.city = city
         self.country = country
         self.type = type
@@ -204,7 +215,7 @@ def __parseFromFile(filePath=None):
     if filePath is None:
         if os.path.isfile("json.txt"):
             __writeAdsFromTxtFile("json.txt")
-           # os.remove("json.txt")
+            #os.remove("json.txt")
         else:
             print("Sorry, file not found. Please try again.")
             __writeTextFromPath()

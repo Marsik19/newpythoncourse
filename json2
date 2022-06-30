@@ -1,6 +1,6 @@
 [{
-    "city": "Lviv",
     "country": "Ukraine",
+    "city": "Lviv",
     "type": "NEWS",
     "descriptionText": "Test text from parsed file. 1.",
     "expirationDate": "",
