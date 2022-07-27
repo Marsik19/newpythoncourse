@@ -1,0 +1,23 @@
+[{
+    "city": "Lviv",
+    "country": "Ukraine",
+    "type": "NEWS",
+    "descriptionText": "Test text from parsed file. 1."
+}, {
+    "city": "Kyiv",
+    "country": "Ukraine",
+    "type": "PersonalAd",
+    "descriptionText": "Test text from parsed file. 2.",
+    "expirationDate": "05/07/22"
+},{
+    "city": "Kyiv",
+    "country": "Ukraine",
+    "type": "Sport News",
+    "descriptionText": "Test text from parsed file. 1.",
+    "kindOfSport": "Basketball",
+    "team1": "Lakers",
+    "team2": "Chicago",
+    "scoreTeam1": "5",
+    "scoreTeam2": "9"
+}
+]
