@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 import csv
+import re
 
 # parent class
 class CSVCreator:
@@ -16,9 +17,54 @@ class CSVCreator:
                 for key, value in dict(wordDict).items():
                     writter.writerow({"word": key, "count": value})
 
+    def createLetterInfoCsv(self):
+        self.deleteLetterInfoCsv()
+        with open("task5.txt") as file:
+            fileText = file.read()
+            clearedText = "".join(c for c in fileText if c.isalpha())
+            letterInfosArray = self.createLetterInfoClasses(clearedText)
+            with open("letterInfo.csv", "w", newline="") as csvFile:
+                writter = csv.DictWriter(csvFile, fieldnames=['letter', 'count_all', 'count_uppercase', 'percentage'])
+                writter.writeheader()
+                for letterInfo in letterInfosArray:
+                    writter.writerow({"letter": letterInfo.letter,
+                                      "count_all": letterInfo.count,
+                                      "count_uppercase": letterInfo.uppercased,
+                                      "percentage": letterInfo.percentage})
+
+    def createLetterInfoClasses(self, text):
+        classArray = []
+        allLetters = []
+        for character in text:
+            if character.lower() in allLetters:
+                continue
+            else:
+                allLetters.append(character.lower())
+                countOfLetter = self.countOfLetterInText(text, character)
+                countOfUppercasedLetter = self.countOfUppercasedLetters(text, character)
+                percentage = self.percentageOfLetter(text, character)
+                letterInfo = LetterInfo(character, countOfLetter, countOfUppercasedLetter, percentage)
+                classArray.append(letterInfo)
+        return classArray
+
+    def countOfLetterInText(self, text, char):
+        return text.lower().count(char.lower())
+
+    def countOfUppercasedLetters(self, text, char):
+        return text.count(char.upper())
+
+    def percentageOfLetter(self, text, char):
+        countOfLetter = text.lower().count(char.lower())
+        countOfAllLetter = len(text.lower())
+        return (countOfLetter / countOfAllLetter) * 100
+
     def deleteWordCsv(self):
         if os.path.isfile("word.csv"):
             os.remove("word.csv")
+
+    def deleteLetterInfoCsv(self):
+        if os.path.isfile("letterInfo.csv"):
+            os.remove("letterInfo.csv")
 
     def getWordCount(self, str):
         counts = dict()
@@ -31,6 +77,12 @@ class CSVCreator:
                 counts[word] = 1
         return counts
 
+class LetterInfo:
+    def __init__(self, letter, count, uppercased, percentage):
+        self.letter = letter
+        self.count = count
+        self.uppercased = uppercased
+        self.percentage = percentage
 
 class Info:
     def __init__(self, type=None, parsedObject=None):
@@ -72,6 +124,7 @@ class News(Info):
         dataFile.write("\n")
         dataFile.close()
         self.csvCreator.createWordCSV()
+        self.csvCreator.createLetterInfoCsv()
 
 
 # class for adding personal advertisement
@@ -274,7 +327,6 @@ def __writeAdsFromTxtFile(filePath=None):
                     __writePersonalAd(jsonObject)
                 case "Sport News":
                     __writeSportAd(jsonObject)
-
 
 
 #__parseFromFile()
