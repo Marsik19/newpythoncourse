@@ -8,7 +8,7 @@ import re
 class CSVCreator:
     def createWordCSV(self):
         self.deleteWordCsv()
-        with open("task5.txt") as file:
+        with open('newsLetter.txt') as file:
             fileText = file.read().lower()
             wordDict = self.getWordCount(fileText)
             with open("word.csv", "w", newline="") as csvFile:
@@ -19,7 +19,7 @@ class CSVCreator:
 
     def createLetterInfoCsv(self):
         self.deleteLetterInfoCsv()
-        with open("task5.txt") as file:
+        with open("newsLetter.txt") as file:
             fileText = file.read()
             clearedText = "".join(c for c in fileText if c.isalpha())
             letterInfosArray = self.createLetterInfoClasses(clearedText)
@@ -68,7 +68,8 @@ class CSVCreator:
 
     def getWordCount(self, str):
         counts = dict()
-        words = str.split()
+        formattedText = re.sub(r'[^\w\s]+|[\d]+', r'', str)
+        words = formattedText.split()
 
         for word in words:
             if word in counts:
@@ -118,7 +119,7 @@ class News(Info):
     # write description in txt
     def writeAdd(self):
         # work with file
-        dataFile = open('task5.txt', 'a')
+        dataFile = open('newsLetter.txt', 'a')
         dataFile.write(self.titleAd)
         dataFile.write(self.fullDescription)
         dataFile.write("\n")
@@ -146,12 +147,13 @@ class PersonalAd(Info):
             self.daysToExpiration) + "\n"
 
     def writeAdd(self):
-        dataFile = open('task5.txt', 'a')
+        dataFile = open('newsLetter.txt', 'a')
         dataFile.write(self.titleAd)
         dataFile.write(self.fullDescription)
         dataFile.write("\n")
         dataFile.close()
         self.csvCreator.createWordCSV()
+        self.csvCreator.createLetterInfoCsv()
 
 
 # class for adding sport news
@@ -182,12 +184,13 @@ class SportNews(Info):
             self.dateOfPublishing) + "\n" + "team 1: " + self.team1 + "\n" + "team 2:" + self.team2 + "\n" + "Score: " + self.scoreTeam1 + ":" + self.scoreTeam2 + "\n" + "Winner: " + self.winner()
 
     def writeAdd(self):
-        dataFile = open('task5.txt', 'a')
+        dataFile = open('newsLetter.txt', 'a')
         dataFile.write(self.titleAd)
         dataFile.write(self.fullDescription)
         dataFile.write("\n")
         dataFile.close()
         self.csvCreator.createWordCSV()
+        self.csvCreator.createLetterInfoCsv()
 
     def winner(self):
         if self.scoreTeam1 > self.scoreTeam2:
@@ -241,11 +244,10 @@ def __writeNews(parsedObject=None):
 def __writePersonalAd(parsedObject=None):
     try:
         personalAd = PersonalAd(parsedObject)
+        personalAd.writeAdd()
     except:
         print("Error during initialization PersonalAd. Check date format.\n")
         writePersonalAdError()
-        mainFunc()
-    personalAd.writeAdd()
 
 def writePersonalAdError():
     dataFile = open('errors.txt', 'a')

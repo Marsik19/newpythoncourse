@@ -8,7 +8,7 @@ import re
 class CSVCreator:
     def createWordCSV(self):
         self.deleteWordCsv()
-        with open("task5.txt") as file:
+        with open("newsLetter.txt") as file:
             fileText = file.read().lower()
             wordDict = self.getWordCount(fileText)
             with open("word.csv", "w", newline="") as csvFile:
@@ -19,7 +19,7 @@ class CSVCreator:
 
     def createLetterInfoCsv(self):
         self.deleteLetterInfoCsv()
-        with open("task5.txt") as file:
+        with open("newsLetter.txt") as file:
             fileText = file.read()
             clearedText = "".join(c for c in fileText if c.isalpha())
             letterInfosArray = self.createLetterInfoClasses(clearedText)
@@ -118,7 +118,7 @@ class News(Info):
     # write description in txt
     def writeAdd(self):
         # work with file
-        dataFile = open('task5.txt', 'a')
+        dataFile = open('newsLetter.txt', 'a')
         dataFile.write(self.titleAd)
         dataFile.write(self.fullDescription)
         dataFile.write("\n")
@@ -146,7 +146,7 @@ class PersonalAd(Info):
             self.daysToExpiration) + "\n"
 
     def writeAdd(self):
-        dataFile = open('task5.txt', 'a')
+        dataFile = open('newsLetter.txt', 'a')
         dataFile.write(self.titleAd)
         dataFile.write(self.fullDescription)
         dataFile.write("\n")
@@ -182,7 +182,7 @@ class SportNews(Info):
             self.dateOfPublishing) + "\n" + "team 1: " + self.team1 + "\n" + "team 2:" + self.team2 + "\n" + "Score: " + self.scoreTeam1 + ":" + self.scoreTeam2 + "\n" + "Winner: " + self.winner()
 
     def writeAdd(self):
-        dataFile = open('task5.txt', 'a')
+        dataFile = open('newsLetter.txt', 'a')
         dataFile.write(self.titleAd)
         dataFile.write(self.fullDescription)
         dataFile.write("\n")
@@ -241,11 +241,10 @@ def __writeNews(parsedObject=None):
 def __writePersonalAd(parsedObject=None):
     try:
         personalAd = PersonalAd(parsedObject)
+        personalAd.writeAdd()
     except:
         print("Error during initialization PersonalAd. Check date format.\n")
         writePersonalAdError()
-        mainFunc()
-    personalAd.writeAdd()
 
 def writePersonalAdError():
     dataFile = open('errors.txt', 'a')
@@ -298,8 +297,8 @@ class AdParsedObject(object):
 
 def __parseFromFile(filePath=None):
     if filePath is None:
-        if os.path.isfile("task8.json"):
-            __writeAdsFromJsonFile("task8.json")
+        if os.path.isfile("dataFromFile.json"):
+            __writeAdsFromJsonFile("dataFromFile.json")
             #os.remove("json.txt")
         else:
             print("Sorry, file not found. Please try again.")
