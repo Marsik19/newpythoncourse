@@ -69,7 +69,8 @@ class CSVCreator:
 
     def getWordCount(self, str):
         counts = dict()
-        words = str.split()
+        formattedText = re.sub(r'[^\w\s]+|[\d]+', r'', str)
+        words = formattedText.split()
 
         for word in words:
             if word in counts:
@@ -134,8 +135,14 @@ class PersonalAd(Info):
         if parsedObject is None:
             super().__init__("PersonalAd")
             # input end data
-            self.expirationDate = datetime.datetime.strptime(input("Write expiration date (example: day/month/year): "),
+            expDate = datetime.datetime.strptime(input("Write expiration date (example: day/month/year): "),
                                                              '%d/%m/%y')
+            while expDate < datetime.datetime.now():
+                print("Sorry, but your date lower than current date.Please try again.")
+                expDate = datetime.datetime.strptime(input("Write expiration date (example: day/month/year): "),
+                                                     '%d/%m/%y')
+
+            self.expirationDate = expDate
         else:
             super().__init__(None, parsedObject)
             self.expirationDate = datetime.datetime.strptime(parsedObject.expirationDate, '%d/%m/%y')
@@ -303,14 +310,20 @@ def __parseFromFile(filePath=None):
             os.remove("dataFromXMLFile.xml")
         else:
             print("Sorry, file not found. Please try again.")
+            mainFunc()
             __writeTextFromPath()
+            # print('test')
+
     else:
         if os.path.isfile(filePath):
             __writeAdsFromXMLFile(filePath)
             os.remove(filePath)
         else:
             print("Sorry, file not found. Please try again.")
+            mainFunc()
             __writeTextFromPath()
+            # print('test')4
+
 
 def __writeAdsFromXMLFile(filePath=None):
     with open(filePath) as file:

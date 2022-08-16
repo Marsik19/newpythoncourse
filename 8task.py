@@ -68,7 +68,8 @@ class CSVCreator:
 
     def getWordCount(self, str):
         counts = dict()
-        words = str.split()
+        formattedText = re.sub(r'[^\w\s]+|[\d]+', r'', str)
+        words = formattedText.split()
 
         for word in words:
             if word in counts:
