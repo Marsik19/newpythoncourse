@@ -26,16 +26,17 @@ class DBManager:
         params = (news.type, news.descriptionText, news.city, news.time, news.fullDescription, news.titleAd)
         query = "INSERT INTO news (type, descText, city, date, fullDescription, titleAd) VALUES (?,?,?,?,?,?)"
         if cls.checkTableExists(cls, 'news'):
-            cls.cursor.execute(query, params)
-            cls.dbConnection.commit()
-            cls.dbConnection.close()
-            # cls.cursor.execute("select * from news")
-            # print(cls.cursor.fetchall())
+            if cls.isRecordNotAddedToTable(cls, "news", news.descriptionText):
+                cls.cursor.execute(query, params)
+                cls.dbConnection.commit()
+                # cls.cursor.execute("select * from news")
+                # print(cls.cursor.fetchall())
+            else:
+                print("Sorry, but this record already added to News table. Checked by description text.")
         else:
             cls.cursor.execute("CREATE TABLE news (type, descText, city, date, fullDescription, titleAd)")
             cls.cursor.execute(query, params)
             cls.dbConnection.commit()
-            cls.dbConnection.close()
 
     @classmethod
     def savePersonalAdInDatabase(cls, personalAd):
@@ -43,17 +44,18 @@ class DBManager:
                   personalAd.fullDescription, personalAd.titleAd)
         query = "INSERT INTO personalAd (type, descText, daysToExpiration, expirationDate, fullDescription, titleAd) VALUES (?,?,?,?,?,?)"
         if cls.checkTableExists(cls, 'personalAd'):
-            cls.cursor.execute(query, params)
-            cls.dbConnection.commit()
-            cls.dbConnection.close()
-            # cls.cursor.execute("select * from personalAd")
-            # print(cls.cursor.fetchall())
+            if cls.isRecordNotAddedToTable(cls, "personalAd", personalAd.descriptionText):
+                cls.cursor.execute(query, params)
+                cls.dbConnection.commit()
+                # cls.cursor.execute("select * from news")
+                # print(cls.cursor.fetchall())
+            else:
+                print("Sorry, but this record already added to personalAd table. Checked by description text.")
         else:
             cls.cursor.execute(
                 "CREATE TABLE personalAd (type, descText, daysToExpiration, expirationDate, fullDescription, titleAd)")
             cls.cursor.execute(query, params)
             cls.dbConnection.commit()
-            cls.dbConnection.close()
 
     @classmethod
     def saveSportNewsInDatabase(cls, sportNews):
@@ -62,22 +64,22 @@ class DBManager:
                   sportNews.scoreTeam1, sportNews.scoreTeam2, sportNews.dateOfPublishing, sportNews.fullDescription)
         query = "INSERT INTO sportNews (type, descText, titleAd, city, country, kindOfSport, team1, team2, scoreTeam1, scoreTeam2, dateOfPublishing, fullDescription) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
         if cls.checkTableExists(cls, 'sportNews'):
-            cls.cursor.execute(query, params)
-            cls.dbConnection.commit()
-            cls.dbConnection.close()
-            # cls.cursor.execute("select * from sportNews")
-            # print(cls.cursor.fetchall())
+            if cls.isRecordNotAddedToTable(cls, "sportNews", sportNews.descriptionText):
+                cls.cursor.execute(query, params)
+                cls.dbConnection.commit()
+                # cls.cursor.execute("select * from news")
+                # print(cls.cursor.fetchall())
+            else:
+                print("Sorry, but this record already added to sportNews table. Checked by description text.")
         else:
             cls.cursor.execute(
                 "CREATE TABLE sportNews (type, descText, titleAd, city, country, kindOfSport, team1, team2, scoreTeam1, scoreTeam2, dateOfPublishing, fullDescription)")
             cls.cursor.execute(query, params)
             cls.dbConnection.commit()
-            cls.dbConnection.close()
 
-    @classmethod
-    def isRecordNotAddedToTable(cls, tableName, descText):
-        cls.cursor.execute("Select * from %s WHERE descText = ?" % tableName, (descText,))
-        object = cls.cursor.fetchone()
+    def isRecordNotAddedToTable(self, tableName, descText):
+        self.cursor.execute("Select * from %s WHERE descText = ?" % tableName, (descText,))
+        object = self.cursor.fetchone()
         return object is None
 
 
@@ -206,10 +208,7 @@ class News(Info):
         dataFile.close()
         self.csvCreator.createWordCSV()
         self.csvCreator.createLetterInfoCsv()
-        if DBManager.isRecordNotAddedToTable("news", self.descriptionText):
-            DBManager.saveNewsInDatabase(self)
-        else:
-            print("Sorry, but this record already added to News table. Checked by description text.")
+        DBManager.saveNewsInDatabase(self)
 
 
 # class for adding personal advertisement
@@ -243,10 +242,7 @@ class PersonalAd(Info):
         dataFile.write("\n")
         dataFile.close()
         self.csvCreator.createWordCSV()
-        if DBManager.isRecordNotAddedToTable("personalAd", self.descriptionText):
-            DBManager.savePersonalAdInDatabase(self)
-        else:
-            print("Sorry, but this record already added to PersonalAd table. Checked by description text.")
+        DBManager.savePersonalAdInDatabase(self)
 
 
 # class for adding sport news
@@ -283,10 +279,7 @@ class SportNews(Info):
         dataFile.write("\n")
         dataFile.close()
         self.csvCreator.createWordCSV()
-        if DBManager.isRecordNotAddedToTable("sportNews", self.descriptionText):
-            DBManager.saveSportNewsInDatabase(self)
-        else:
-            print("Sorry, but this record already added to SportNews table. Checked by description text.")
+        DBManager.saveSportNewsInDatabase(self)
 
     def winner(self):
         if self.scoreTeam1 > self.scoreTeam2:
