@@ -8,7 +8,7 @@ import sqlite3
 
 class DBManager:
     dbConnection = sqlite3.connect('10.db')
-    cursor = sqlite3.connect('10.db').cursor()
+    cursor = dbConnection.cursor()
 
     def checkTableExists(self, tablename):
         self.cursor.execute("""
